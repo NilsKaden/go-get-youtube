@@ -62,9 +62,11 @@ type Format struct {
 
 // Download options
 type Option struct {
-	Resume bool // resume failed or cancelled download
-	Rename bool // rename output file using video title
-	Mp3    bool // extract audio using ffmpeg
+	Resume      bool   // resume failed or cancelled download
+	Rename      bool   // rename output file using video title
+	Mp3         bool   // extract audio using ffmpeg
+	StartOffset string // offset for conversion, from the start
+	Duration    string // duration to be converted. startOffset + duration = endTime
 }
 
 // _________________________________________________________________
@@ -194,7 +196,10 @@ func (video *Video) Download(index int, filename string, option *Option) error {
 			fmt.Println("Extracting audio ..")
 			fname := video.Filename
 			mp3 := strings.TrimRight(fname, filepath.Ext(fname)) + ".mp3"
-			cmd := exec.Command(ffmpeg, "-y", "-loglevel", "quiet", "-i", fname, "-vn", mp3)
+
+			// start + duration
+			cmd := exec.Command(ffmpeg, "-y", "-loglevel", "quiet", "-t", option.StartOffset, "-i", fname, "-t", option.Duration, "-vn", mp3)
+
 			cmd.Stdin = os.Stdin
 			cmd.Stdout = os.Stdout
 			cmd.Stderr = os.Stderr
