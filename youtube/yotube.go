@@ -198,7 +198,7 @@ func (video *Video) Download(index int, filename string, option *Option) error {
 			mp3 := strings.TrimRight(fname, filepath.Ext(fname)) + ".mp3"
 
 			// start + duration
-			cmd := exec.Command(ffmpeg, "-y", "-loglevel", "quiet", "-ss", option.StartOffset, "-i", fname, "-to", option.Duration, "-vn", mp3)
+			cmd := exec.Command(ffmpeg, "-y", "-ss", option.StartOffset, "-to", option.Duration, "-i", fname, "-vn", mp3)
 
 			cmd.Stdin = os.Stdin
 			cmd.Stdout = os.Stdout
