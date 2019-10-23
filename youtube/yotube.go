@@ -66,7 +66,7 @@ type Option struct {
 	Rename      bool   // rename output file using video title
 	Mp3         bool   // extract audio using ffmpeg
 	StartOffset string // offset for conversion, from the start
-	Duration    string // duration to be converted. startOffset + duration = endTime
+	EndTime     string // end time
 }
 
 // _________________________________________________________________
@@ -197,8 +197,8 @@ func (video *Video) Download(index int, filename string, option *Option) error {
 			fname := video.Filename
 			mp3 := strings.TrimRight(fname, filepath.Ext(fname)) + ".mp3"
 
-			// start + duration
-			cmd := exec.Command(ffmpeg, "-y", "-ss", option.StartOffset, "-to", option.Duration, "-i", fname, "-vn", mp3)
+			// start + endtime
+			cmd := exec.Command(ffmpeg, "-y", "-i", fname, "-ss", option.StartOffset, "-to", option.EndTime, "-vn", mp3)
 
 			cmd.Stdin = os.Stdin
 			cmd.Stdout = os.Stdout
